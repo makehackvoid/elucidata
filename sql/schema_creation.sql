@@ -61,7 +61,7 @@ CREATE INDEX pki_rm ON "resource_map" ("id");
 
 -- Table: data_point
 -- DROP TABLE data_point;
-/*
+--/*
 CREATE TABLE "data_point" -- was "point"
 (
   "map_id" text NOT NULL,
@@ -75,8 +75,10 @@ CREATE TABLE "data_point" -- was "point"
       REFERENCES resource_map (id)
       ON UPDATE NO ACTION ON DELETE CASCADE
 );
-*/
+CREATE INDEX pki_dp ON "data_point" ("map_id");
+--*/
 
+/*
 CREATE TABLE "data_point" -- was "point"
 (
   "id" SERIAL NOT NULL PRIMARY KEY,
@@ -86,6 +88,8 @@ CREATE TABLE "data_point" -- was "point"
   "weight" integer
 );
 CREATE INDEX pki_dp ON "data_point" ("map_id");
+*/
+
 
 -- Table: resource_text
 -- DROP TABLE resource_text;
