@@ -67,3 +67,4 @@ port = '5432'
 database = 'mhv-govhack'
 
 engine = create_engine('postgresql://' + user + ':' + password + '@' + server + ':' + port + '/' + database)
+metadata.create_all(engine)
