@@ -7,6 +7,20 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import SQLAlchemyError
 import dateutil.parser
 import time
+import regex
+from collections import Counter
+
+stop_words = '''about,after,all,also,an,and,another,any,are,as,at,be,because,been,before
+being,between,both,but,by,came,can,come,could,did,do,each,for,from,get
+got,has,had,he,have,her,here,him,himself,his,how,if,in,into,is,it,like
+make,many,me,might,more,most,much,must,my,never,now,of,on,only,or,other
+our,out,over,said,same,see,should,since,some,still,such,take,than,that
+the,their,them,then,there,these,they,this,those,through,to,too,under,up
+very,was,way,we,well,were,what,where,which,while,who,with,would,you,your,a
+b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,$,1,2,3,4,5,6,7,8,9,0,_
+NaN,Inc'''
+stop_words = stop_words.replace('\n',',')
+stop_words = stop_words.split(',')
 
 api_url = 'http://opendata.linkdigital.com.au/api/3/'
     
@@ -25,6 +39,7 @@ else:
         raw_data = f.read()
         f.close()
     
+    raw_data = raw_data.decode('iso-8859-1').encode('ascii', 'ignore')
     data = json.loads(raw_data)
 
 # print data.keys()
@@ -135,6 +150,7 @@ for key, data_set in data_sets.iterrows():
         dataset.provider = data_set['organization']['title']
         dataset.revision_date = time.mktime(dateutil.parser.parse(data_set['revision_timestamp']).timetuple())
         dataset.revision_id = data_set['revision_id']
+        note = data_set['notes']
         if note.startswith('    \n\n'):
             note = note.replace('    \n\n','')
             note = note[0:note.find('\n\n')]
@@ -155,7 +171,7 @@ for key, data_set in data_sets.iterrows():
             #    session.add(dataset)
             #    session.commit()
             session.close()
-            break # continue
+            continue
         
         session.begin()
         # fill the group table
@@ -171,11 +187,14 @@ for key, data_set in data_sets.iterrows():
             tag = Tag()
             # TODO: not sure if we can set the dataset_id outside the loop?
             tag.dataset_id = data_set['id']
-            tag.tag = a_tag
+            tag.tag = a_tag['name']
             session.add(tag)
         
+        session.commit()
+
         # fill the resource_text or resource_map table 
         for resource in data_set['resources']:
+            session.begin()
             if text_format(resource):
                 resource_text = ResourceText()
                 resource_text.id = resource['id']
@@ -183,19 +202,47 @@ for key, data_set in data_sets.iterrows():
                 resource_text.name = resource['name']
                 resource_text.resource_url = resource['url']
                 resource_text.type = resource['format']
-                session.add(resource_text)
                 if resource['format'].lower() == 'csv':
-                    df = pandas.DataFrame.from_csv(resource['url'])
-                    resource_text.column_headers = ', '.join([str(x) for x in df.columns.tolist()])
-                    resource_text.row_headers = ', '.join([str(x) for x in df.index.tolist()])
-                    # TODO: parsed wordcount
-                elif resource['format'].lower() == 'xml':
+                    cnt = Counter()
+                    
+                    try:
+                        df = pandas.DataFrame.from_csv(resource['url'])
+                        resource_text.column_headers = ', '.join([str(x).decode('iso-8859-1').encode('ascii', 'ignore') for x in df.columns.tolist()])
+                        resource_text.row_headers = ', '.join([str(x).decode('iso-8859-1').encode('ascii', 'ignore') for x in df.index.tolist()])
+                        a_words = regex.sub('[^a-zA-Z ]+','', df.to_string())
+                        a_words = a_words.decode('iso-8859-1').encode('ascii', 'ignore')
+                        a_words = a_words.replace('NaN','')
+                        for a_word in a_words.split():
+                            if a_word not in stop_words:
+                                cnt[a_word] += 1
+                        resource_text.wordcount = len(a_words)
+                        resource_text.parsed = True
+                    
+                        session.add(resource_text)
+                        session.commit()
+                        #if len(cnt.items()) > 0:
+                        session.begin()
+                        # get the top 30 words and put htem into word
+                        for w in cnt.most_common(30):
+                            word = Word()
+                            word.word = w[0]
+                            word.frequency = w[1]
+                            word.text_id = resource['id']
+                            session.add(word)
+                        session.commit()
+                        
+                    except:
+                        resource_text.parsed = False
+                        session.add(resource_text)
+                        session.commit()
+
+                        continue
+                # elif resource['format'].lower() == 'xml':
                     # TODO (later)
-                    None
-                else:
-                    print 'unexpected text format:', resource['format']
-                # TODO: have to get the actual resources here from it's url and then parse it based on type
-                # TODO: store the parsed data in the other data tables 
+                    # None
+                # else:
+                    # print 'unexpected text format:', resource['format']
+ 
             else:
                 resource_map = ResourceMap()
                 resource_map.id = resource['id']
@@ -203,14 +250,15 @@ for key, data_set in data_sets.iterrows():
                 resource_map.name = resource['name']
                 resource_map.resource_url = resource['url']
                 resource_map.type = resource['format']
-                session.add(resource_map)
                 # TODO: have to get the actual resources here from it's url and then parse it based on type
                 if resource['format'].lower() == 'kml':
                     # TODO: parse kml data and fill datapoint and coordinate tables
+                    # print resource['url']
                     None
-                else:
-                    print 'unexpected text format:', resource['format']
-
-        session.commit()
-
-        break
+                # else:
+                    # print 'unexpected text format:', resource['format']
+                session.add(resource_map)
+                session.commit()
+        session.close()
+        
+print "finished"
