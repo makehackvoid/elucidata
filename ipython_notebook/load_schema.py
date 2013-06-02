@@ -29,6 +29,8 @@ dataset = Table('dataset', metadata,
     Column('revision_date', Integer),
     Column('revision_id', String),
     Column('name', String),
+    Column('description', String),
+    Column('url_name', String),
     Column('provider', String)
 )
 
