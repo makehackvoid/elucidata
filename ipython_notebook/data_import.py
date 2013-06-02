@@ -49,7 +49,7 @@ data_sets = data_sets[[
     # 'metadata_created',
     # 'metadata_modified',
     'name',
-    # 'notes',
+    'notes',
     'num_resources',
     'num_tags',
     'organization',
@@ -135,10 +135,12 @@ for key, data_set in data_sets.iterrows():
         dataset.provider = data_set['organization']['title']
         dataset.revision_date = time.mktime(dateutil.parser.parse(data_set['revision_timestamp']).timetuple())
         dataset.revision_id = data_set['revision_id']
+        if note.startswith('    \n\n'):
+            note = note.replace('    \n\n','')
+            note = note[0:note.find('\n\n')]
+        dataset.description = note
         session.add(dataset)
-        # TODO: add field to database
-        # dataset.description = data_set['notes'] up to the second new line
-
+        
         try:
             session.commit()
         except SQLAlchemyError: # already exists (hopefully)
@@ -188,7 +190,7 @@ for key, data_set in data_sets.iterrows():
                     resource_text.row_headers = ', '.join([str(x) for x in df.index.tolist()])
                     # TODO: parsed wordcount
                 elif resource['format'].lower() == 'xml':
-                    # TODO
+                    # TODO (later)
                     None
                 else:
                     print 'unexpected text format:', resource['format']
@@ -203,8 +205,12 @@ for key, data_set in data_sets.iterrows():
                 resource_map.type = resource['format']
                 session.add(resource_map)
                 # TODO: have to get the actual resources here from it's url and then parse it based on type
-                # TODO: store the parsed data in the other data tables 
-            
+                if resource['format'].lower() == 'kml':
+                    # TODO: parse kml data and fill datapoint and coordinate tables
+                    None
+                else:
+                    print 'unexpected text format:', resource['format']
+
         session.commit()
 
         break
