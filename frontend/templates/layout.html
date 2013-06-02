@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<title>Elucidata</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600' rel='stylesheet' type='text/css'>
+<link href="/static/css/style.css" rel="stylesheet">
+{% block head %}{% endblock %}
+<link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+	<div class="navbar">
+	  <div class="navbar-inner">
+	    <a class="brand" href="/">
+			<span class="elucidata">Eluci<em>data</em></span>
+	    </a>
+	    <ul class="nav">
+	    	{% set navigation_bar = [
+			    ('/', 'index', 'Home', 'icon-home'),
+			    ('/cloud', 'cloud', 'Word Cloud', 'icon-cloud'),
+			    ('/map', 'map', 'Map', 'icon-map-marker')
+			] -%}
+			{% for href, id, caption, icon in navigation_bar %}
+			  <li{% if id == active_page %} class="active"{% endif %}>
+			    <a href="{{ href|e }}"><i class="{{ icon|e }} icon-large"></i> {{ caption|e }}</a>
+			  </li>
+			{% endfor %}
+	    </ul>
+	  </div>
+	</div>
+	{% block body %}{% endblock %}
+	<div class="footer">
+		<p><span class="elucidata">Eluci<em>data</em></span> is an open source project created at <a href="http://govhack.org">GovHack</a> by <a href="http://makehackvoid.com">MakeHackVoid</a></p>
+	</div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

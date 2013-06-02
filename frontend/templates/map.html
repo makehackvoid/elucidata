@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% set active_page = "map" %}
+{% block head %}
+<style type="text/css">
+	.map {
+		width: 100%;
+		height: 300px;
+	}
+
+	.nav-wrap {
+		text-align: center;
+	}
+
+	.nav {
+		text-align: left;
+		display: inline-block;
+	}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="nav-wrap">
+	<ul class="nav nav-pills">
+		<li class="active"><a href="#heatmap">Heatmap</a></li>
+		<li><a href="#markers">Markers</a></li>
+	</ul>
+</div>
+<div class="map"></div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+window.onload = function(){
+    // standard gmaps initialization
+    var myLatlng = new google.maps.LatLng(-26.187483, 133.857422);
+    // define map properties
+    var myOptions = {
+      zoom: 4,
+      center: myLatlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      disableDefaultUI: false,
+      scrollwheel: true,
+      draggable: true,
+      navigationControl: true,
+      mapTypeControl: false,
+      scaleControl: true,
+      disableDoubleClickZoom: false
+    };
+    // we'll use the heatmapArea 
+    var map = new google.maps.Map($(".map")[0], myOptions);
+
+    // Dynamically resize map based on browser size
+    var resize = function() {
+	    var height = $(window).height() - $(".map").offset().top - $('.footer').outerHeight() - 40;
+	    if(height < 300) { height = 300; }
+	    $(".map").height(height);
+
+	    google.maps.event.trigger(map, "resize");
+    }
+
+    $(window).resize(resize);
+    resize();
+}
+</script>
+{% endblock %}

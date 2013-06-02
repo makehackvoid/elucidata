@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+{% set active_page = "index" %}
+{% block head %}
+<style>
+	header {
+		text-align: center;
+	}
+
+	header {
+		font-size: 120%;
+	}
+
+	header h1 {
+		font-size: 120px;
+		line-height: 130px;
+		font-weight: 200;
+	}
+
+	header p {
+		margin-top: -10px;
+	}
+
+	header h1 a {
+		color: #333;
+	}
+
+	header h1 a:hover {
+		color: #333;
+		text-decoration: none;
+	}
+
+	h2 a {
+		color: #333;
+	}
+
+	h2 a:hover {
+		text-decoration: none;
+	}
+
+	h2 {
+		text-align: center;
+	}
+
+	.map {
+		width: 100%;
+		height: 400px;
+		background-color: #ccc;
+	}
+
+	.cloud {
+		height: 400px;
+	}
+</style>
+{% endblock %}
+
+{% block body %}
+<header>
+	<h1><a href="/"><span class="elucidata">Eluci<em>data</em></span></a></h1>
+	<p>A visual browser for <a href="http://data.gov.au">data.gov.au</a> datasets</p>
+</header>
+<div class="row">
+	<div class="span6">
+		<h2><a href="/cloud">Word Cloud</a></h2>
+		<div class="cloud"></div>
+	</div>
+	<div class="span6">
+		<h2><a href="/cloud">Map</a></h2>
+		<div class="map"></div>
+	</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="/static/javascript/d3.layout.cloud.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+window.onload = function(){
+	// standard gmaps initialization
+	var myLatlng = new google.maps.LatLng(-26.187483, 133.857422);
+	// define map properties
+	var myOptions = {
+		zoom: 3,
+		center: myLatlng,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		disableDefaultUI: false,
+		scrollwheel: true,
+		draggable: true,
+		navigationControl: true,
+		mapTypeControl: false,
+		scaleControl: true,
+		disableDoubleClickZoom: false
+	};
+	// we'll use the heatmapArea 
+	var map = new google.maps.Map($(".map")[0], myOptions);
+
+	// cloud
+	var words = [
+			"Lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "Donec", "sodales", "erat", "a", "lectus", "pretium", "viverra", "Vivamus", "eu", "turpis", "vitae", "tellus", "suscipit", "condimentum", "ac", "vitae", "sapien", "Curabitur", "elementum", "condimentum", "sapien", "vitae"].map(function(d) {
+			return {text: d, size: 10 + Math.random() * 45};
+		});
+
+
+	$(window).resize(function() {
+		makeCloud('.cloud', words);
+		google.maps.event.trigger(map, "resize");
+	});
+
+	makeCloud('.cloud', words);
+}
+</script>
+
+<script src="/static/javascript/cloud.js"></script>
+{% endblock %}

@@ -1,0 +1,39 @@
+body {
+	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.navbar {
+	margin-top: 20px;
+}
+
+.elucidata em {
+	font-style: normal;
+	color: #e33;
+}
+
+.cloud {
+	width: 100%;
+	text-align: center;
+}
+
+.cloud svg {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.cloud a {
+	text-decoration: none;
+	fill: #08c;
+}
+
+.cloud a:hover {
+	fill: #005580;
+}
+
+.footer {
+	margin: 20px 0;
+}
+
+.footer p {
+	text-align: right;
+}
