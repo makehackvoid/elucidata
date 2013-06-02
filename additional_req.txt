@@ -1,0 +1,10 @@
+postgresql-server
+postgresql
+postgresql-devel
+anaconda
+psycopg2
+make
+gcc
+build
+autobuild
+sqlalchemy (via pip)
