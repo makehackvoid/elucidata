@@ -62,11 +62,13 @@ group = Table('group', metadata,
     Column('group', String, primary_key = True, autoincrement = False)
 )
 
+# TODO: move database details into config file not held in repository
 user = 'postgres'
 password = ''
 server = 'localhost'
 port = '5432'
 database = 'mhv-govhack'
+databaseurl = 'postgresql://' + user + ':' + password + '@' + server + ':' + port + '/' + database
+engine = create_engine(databaseurl, client_encoding='utf8')
 
-engine = create_engine('postgresql://' + user + ':' + password + '@' + server + ':' + port + '/' + database)
 metadata.create_all(engine)
