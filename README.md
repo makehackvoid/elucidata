@@ -6,7 +6,7 @@ Our GovHack project page is [http://hackerspace.govhack.org/?q=groups/elucidata]
 
 The system consists of two major components, the backend which gathers the data and the frontend that allows users to explore it.
 
-The frontend is a website which the end user accesses, it uses [Twitter Bootstrap](http://twitter.github.io/bootstrap/), [Google Maps API](https://developers.google.com/maps/), [Flask](http://flask.pocoo.org/), [FontAwesome](http://fortawesome.github.io/Font-Awesome/), [Google Web Fonts](http://www.google.com/fonts/), [jQuery](http://jquery.com/) and [D3.js](http://d3js.org).
+The frontend is a website which the end user accesses, it uses [Twitter Bootstrap](http://twitter.github.io/bootstrap/), [Google Maps API](https://developers.google.com/maps/), [Flask](http://flask.pocoo.org/), [Font Awesome](http://fortawesome.github.io/Font-Awesome/), [Google Web Fonts](http://www.google.com/fonts/), [jQuery](http://jquery.com/) and [D3.js](http://d3js.org).
 
 The backend populates the data in the database by accessing the [CKAN api](http://docs.ckan.org/en/latest/api.html) interface on [data.gov.au](http://data.gov.au). The information is then stored in a [PostgreSQL](http://www.postgresql.org/) database.
 
@@ -16,7 +16,6 @@ It is intended that the backend will automatically check the repositories as nee
 
  - The current version only implements csv parsing. We intend to expand it to include all of the text and location based datafiles on data.gov.au.
  - checking for updates to datasets and updating their information has not been implemented
- - the front end on github isn't working properly, a new version will be available shortly
 
 ## Dependencies
 

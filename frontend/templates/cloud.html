@@ -17,16 +17,19 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="/static/javascript/d3.v3.min.js" charset="utf-8"></script>
 <script src="/static/javascript/d3.layout.cloud.js"></script>
 <script src="/static/javascript/cloud.js"></script>
 <script type="text/javascript">
 	// cloud
+	/*
 	var words = [
 			"Lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "Donec", "sodales", "erat", "a", "lectus", "pretium", "viverra", "Vivamus", "eu", "turpis", "vitae", "tellus", "suscipit", "condimentum", "ac", "vitae", "sapien", "Curabitur", "elementum", "condimentum", "sapien", "vitae"].map(function(d) {
 			return {text: d, size: 20 + Math.random() * 90};
 		});
+	*/
 
+	var words = {{ cloud_data|safe }};
 	// Dynamically resize map based on browser size
 	var resize = function() {
 		var height = $(window).height() - $(".cloud").offset().top - $('.footer').outerHeight() - 40;

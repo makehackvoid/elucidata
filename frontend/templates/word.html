@@ -33,22 +33,22 @@
 {% block body %}
 <div class="row">
 	<div class="span5">
-		<h2>{{ word|e|title }}</h2>
+		<h2>{{ word|e }}</h2>
 	</div>
 	<div class="span7">
 		<div class="cloud main-cloud"></div>
 	</div>
 </div>
 
-{% for number in range(1, 6) %}
-  <div class="row">
+{% for dataset in datasets %}
+<div class="row">
 	<div class="span7">
-		<h3><a href="#">Title {{ number }}</a></h3>
-		<p>Etiam hendrerit mattis metus, non facilisis mauris consectetur eget. Nullam iaculis tempor nisl id vehicula. Suspendisse potenti. Cras nulla elit, adipiscing non cursus congue, luctus sit amet lacus.</p>
-		<a class="data-gov-link" href="http://opendata.linkdigital.com.au/">view on data.gov.au <i class="icon-double-angle-right"></i></a>
+		<h3><a href="#">{{ dataset.name|e }}</a></h3>
+		<p>{{ dataset.description|e }}</p>
+		<a class="data-gov-link" href="http://opendata.linkdigital.com.au/dataset/{{ dataset.url_name|e }}">view on data.gov.au <i class="icon-double-angle-right"></i></a>
 	</div>
 	<div class="span5">
-		<div id="cloud-{{ number }}" class="cloud set-cloud"></div>
+		<div id="cloud-{{ dataset.id }}" class="cloud set-cloud"></div>
 	</div>
 </div>
 {% endfor %}
@@ -56,27 +56,20 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="/static/javascript/d3.v3.min.js" charset="utf-8"></script>
 <script src="/static/javascript/d3.layout.cloud.js"></script>
 <script src="/static/javascript/cloud.js"></script>
 <script type="text/javascript">
 	// cloud
-	var words = [
+	/*var words = [
 			"Lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "Donec", "sodales", "erat", "a", "lectus", "pretium", "viverra", "Vivamus", "eu", "turpis", "vitae", "tellus"].map(function(d) {
 			return {text: d, size: 15 + Math.random() * 70};
-		});
+		}); */
 
-	makeCloud('.main-cloud', words);
+	makeCloud('.main-cloud', {{ cloud_data|safe }});
 
-	var words = [
-		"erat", "a", "lectus", "pretium", "viverra", "Vivamus", "eu", "turpis", "vitae", "tellus", "suscipit", "condimentum", "ac", "vitae", "sapien", "Curabitur", "elementum", "condimentum", "sapien", "vitae"].map(function(d) {
-		return {text: d, size: 10 + Math.random() * 20};
-	});
-
-	makeCloud('#cloud-1', words);
-	makeCloud('#cloud-2', words);
-	makeCloud('#cloud-3', words);
-	makeCloud('#cloud-4', words);
-	makeCloud('#cloud-5', words);
+	{% for dataset in datasets %}
+		makeCloud('#cloud-{{ dataset.id }}', {{ dataset_clouds[dataset]|safe }});
+	{% endfor %}
 </script>
 {% endblock %}

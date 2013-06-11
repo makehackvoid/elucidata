@@ -1,7 +1,12 @@
+{% set navigation_bar = [
+    ('/', 'index', 'Home', 'icon-home'),
+    ('/cloud', 'cloud', 'Word Cloud', 'icon-cloud'),
+    ('/map', 'map', 'Map', 'icon-map-marker')
+] -%}
 <!doctype html>
 <html>
 <head>
-<title>Elucidata</title>
+<title>Elucidata - {% for href, id, caption, icon in navigation_bar -%}{% if id == active_page -%}{{ caption|e }}{% endif -%}{% endfor -%}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -18,17 +23,14 @@
 			<span class="elucidata">Eluci<em>data</em></span>
 	    </a>
 	    <ul class="nav">
-	    	{% set navigation_bar = [
-			    ('/', 'index', 'Home', 'icon-home'),
-			    ('/cloud', 'cloud', 'Word Cloud', 'icon-cloud'),
-			    ('/map', 'map', 'Map', 'icon-map-marker')
-			] -%}
 			{% for href, id, caption, icon in navigation_bar %}
 			  <li{% if id == active_page %} class="active"{% endif %}>
 			    <a href="{{ href|e }}"><i class="{{ icon|e }} icon-large"></i> {{ caption|e }}</a>
 			  </li>
 			{% endfor %}
 	    </ul>
+
+	    <ul class="nav pull-right"><li><a href="https://github.com/makehackvoid/elucidata"><i class="icon-github icon-large"></i> View on GitHub</a></li></ul>
 	  </div>
 	</div>
 	{% block body %}{% endblock %}

@@ -13,7 +13,6 @@
 	header h1 {
 		font-size: 120px;
 		line-height: 130px;
-		font-weight: 200;
 	}
 
 	header p {
@@ -63,7 +62,7 @@
 		<h2><a href="/cloud">Word Cloud</a></h2>
 		<div class="cloud"></div>
 	</div>
-	<div class="span6">
+	<div class="span6 map-section">
 		<h2><a href="/cloud">Map</a></h2>
 		<div class="map"></div>
 	</div>
@@ -71,7 +70,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="/static/javascript/d3.v3.min.js" charset="utf-8"></script>
 <script src="/static/javascript/d3.layout.cloud.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript">
@@ -91,15 +90,28 @@ window.onload = function(){
 		scaleControl: true,
 		disableDoubleClickZoom: false
 	};
-	// we'll use the heatmapArea 
+
 	var map = new google.maps.Map($(".map")[0], myOptions);
 
-	// cloud
-	var words = [
-			"Lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "Donec", "sodales", "erat", "a", "lectus", "pretium", "viverra", "Vivamus", "eu", "turpis", "vitae", "tellus", "suscipit", "condimentum", "ac", "vitae", "sapien", "Curabitur", "elementum", "condimentum", "sapien", "vitae"].map(function(d) {
-			return {text: d, size: 10 + Math.random() * 45};
+	var infowindow = new google.maps.InfoWindow();
+
+	{% for point in map_data %}
+	addPoint({{ map_data.lat }}, {{ map_data.long }}, map);
+	{% endfor %}
+
+	var addPoint = function(lat, lng, map) {
+		var marker = new google.maps.Marker({
+	      position: new google.maps.LatLng(lat,lng),
+	      map: map
 		});
 
+		google.maps.event.addListener(marker, 'click', function() {
+	    infowindow.setContent("<a href='/'>test</a>");
+	    infowindow.open(map, marker);
+	  });
+	}
+
+	var words = {{ cloud_data|safe }};
 
 	$(window).resize(function() {
 		makeCloud('.cloud', words);

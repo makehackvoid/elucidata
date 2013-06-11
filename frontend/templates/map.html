@@ -15,6 +15,10 @@
 		text-align: left;
 		display: inline-block;
 	}
+
+	body {
+		position: relative;
+	}
 </style>
 {% endblock %}
 
@@ -47,8 +51,19 @@ window.onload = function(){
       scaleControl: true,
       disableDoubleClickZoom: false
     };
-    // we'll use the heatmapArea 
+
     var map = new google.maps.Map($(".map")[0], myOptions);
+
+	{% for point in map_data %}
+	addPoint({{ map_data.lat }}, {{ map_data.long }}, map);
+	{% endfor %}
+
+	var addPoint = function(lat, lng, map) {
+		var marker = new google.maps.Marker({
+	      position: new google.maps.LatLng(lat,lng),
+	      map: map
+		});
+	}
 
     // Dynamically resize map based on browser size
     var resize = function() {

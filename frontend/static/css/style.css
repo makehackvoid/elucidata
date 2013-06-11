@@ -6,6 +6,10 @@ body {
 	margin-top: 20px;
 }
 
+.elucidata {
+	font-weight: 200;
+}
+
 .elucidata em {
 	font-style: normal;
 	color: #e33;
@@ -37,3 +41,5 @@ body {
 .footer p {
 	text-align: right;
 }
+
+.map img{max-width: inherit;}
