@@ -15,11 +15,13 @@ It is intended that the backend will automatically check the repositories as nee
 ## Status
 
  - The current version only implements csv parsing. We intend to expand it to include all of the text and location based datafiles on data.gov.au.
+ - because there is not yet any location based data, maps haven't been fully implemented in the front end
  - checking for updates to datasets and updating their information has not been implemented
+ - we plan to have a demo site running soon and will add the url to this document.
 
 ## Dependencies
 
-In order to use our product you will need to install the following on your computer
+In order to run the backend you will need to install the following on your computer
 
  - Python
  - postgresql
