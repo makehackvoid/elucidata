@@ -49,7 +49,7 @@ resource_text = Table('resource_text', metadata,
 resource_word = Table('word', metadata,
     Column('text_id', String, ForeignKey('resource_text.id'), primary_key = True, autoincrement = False),
     Column('word', String, primary_key = True, autoincrement = False),
-    Column('frequency', Integer)
+    Column('frequency', Float)
 )
 
 tag = Table('tag', metadata,
