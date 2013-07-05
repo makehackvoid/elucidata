@@ -12,6 +12,10 @@ The backend populates the data in the database by accessing the [CKAN api](http:
 
 It is intended that the backend will automatically check the repositories as needed to insure that the versioning information that is stored on our cache is of the most current date and time.
 
+## Demo
+
+A live demo of Elucidata can be found at [elucidata.makehackvoid.com](http://elucidata.makehackvoid.com)
+
 ## Status
 
  - The current version only implements csv parsing. We intend to expand it to include all of the text and location based datafiles on data.gov.au.
